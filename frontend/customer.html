@@ -1,0 +1,111 @@
+<!-- frontend/customer.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>eMart - Customer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #28a745;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 30px;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      width: 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>Welcome to eMart 🛒 - Customer Page</header>
+  <div class="container" id="product-container"></div>
+
+  <script>
+    async function loadProducts() {
+      const response = await fetch('http://localhost:5000/api/products');
+      const products = await response.json();
+      console.log(products);
+  
+      const container = document.getElementById('product-container');
+      container.innerHTML = '';
+  
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'card';
+  
+        card.innerHTML = `
+          <img src="${product.image_url}" alt="${product.name}" />
+          <h3>${product.name}</h3>
+          <p>Price: ₹${product.price}</p>
+          <p>Available: ${product.quantity}</p>
+          <button onclick="buyProduct(${product.product_id})" ${product.quantity == 0 ? 'disabled' : ''}>
+            ${product.quantity == 0 ? 'Out of Stock' : 'Buy'}
+          </button>
+        `;
+  
+        container.appendChild(card);
+      });
+    }
+  
+    async function buyProduct(id) {
+      const res = await fetch(`http://localhost:5000/api/products/buy/${id}`, {
+        method: 'POST'
+      });
+  
+      const result = await res.json();
+  
+      if (res.ok) {
+        alert('Product purchased successfully!');
+        loadProducts(); // refresh product list
+      } else {
+        alert(result.error || 'Failed to purchase');
+      }
+    }
+  
+    loadProducts();
+  </script>
+  
+</body>
+</html>

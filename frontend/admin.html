@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>eMart Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input, button, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-collapse: collapse;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    button.delete {
+      background-color: #dc3545;
+    }
+
+    button.edit {
+      background-color: #007bff;
+    }
+
+    img {
+      width: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>eMart Admin Panel</h1>
+
+  <form id="product-form">
+    <input type="hidden" id="product-id">
+    <input type="text" id="name" placeholder="Product Name" required>
+    <input type="number" id="category_id" placeholder="Category ID" required>
+    <input type="number" id="price" placeholder="Price" required>
+    <input type="number" id="quantity" placeholder="Quantity" required>
+    <input type="text" id="image_url" placeholder="Image URL" required>
+    <textarea id="description" placeholder="Description"></textarea>
+    <button type="submit">Save Product</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category ID</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="product-list"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('product-form');
+    const idField = document.getElementById('product-id');
+    const nameField = document.getElementById('name');
+    const categoryField = document.getElementById('category_id');
+    const priceField = document.getElementById('price');
+    const quantityField = document.getElementById('quantity');
+    const imageField = document.getElementById('image_url');
+    const descField = document.getElementById('description');
+    const list = document.getElementById('product-list');
+
+    const API = 'http://localhost:5000/api/products';
+
+    function loadProducts() {
+      fetch(API)
+        .then(res => res.json())
+        .then(data => {
+          list.innerHTML = '';
+          data.forEach(p => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${p.name}</td>
+              <td>${p.category_id}</td>
+              <td>₹${p.price}</td>
+              <td>${p.quantity}</td>
+              <td><img src="images/${p.image_url}" /></td>
+              <td>${p.description}</td>
+              <td>
+                <button class="edit" onclick="editProduct(${p.product_id}, '${p.name}', ${p.category_id}, ${p.price}, ${p.quantity}, '${p.image_url}', \`${p.description}\`)">Edit</button>
+                <button onclick="addQuantity(${p.product_id}, ${p.quantity})">Add Qty</button>
+                <button class="delete" onclick="deleteProduct(${p.product_id})">Delete</button>
+              </td>
+            `;
+            list.appendChild(row);
+          });
+        });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const product = {
+        name: nameField.value,
+        category_id: categoryField.value,
+        price: priceField.value,
+        quantity: quantityField.value,
+        image_url: imageField.value,
+        description: descField.value
+      };
+
+      const method = idField.value ? 'PUT' : 'POST';
+      const url = idField.value ? `${API}/${idField.value}` : API;
+
+      fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      }).then(() => {
+        form.reset();
+        idField.value = '';
+        loadProducts();
+      });
+    });
+
+    function editProduct(id, name, category_id, price, quantity, image, desc) {
+      idField.value = id;
+      nameField.value = name;
+      categoryField.value = category_id;
+      priceField.value = price;
+      quantityField.value = quantity;
+      imageField.value = image;
+      descField.value = desc;
+    }
+
+    function deleteProduct(id) {
+      fetch(`${API}/${id}`, { method: 'DELETE' })
+        .then(() => loadProducts());
+    }
+
+    function addQuantity(id, currentQty) {
+      const addMore = prompt(`Current quantity is ${currentQty}. Enter quantity to add:`);
+
+      const qtyToAdd = parseInt(addMore);
+      if (isNaN(qtyToAdd) || qtyToAdd <= 0) {
+        alert("Invalid quantity");
+        return;
+      }
+
+      fetch(`${API}/add-quantity/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: qtyToAdd })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        loadProducts();
+      })
+      .catch(err => alert("Something went wrong"));
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
