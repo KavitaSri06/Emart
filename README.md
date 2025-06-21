@@ -2,7 +2,10 @@
 
 ## Overview
 eMart is a web application with separate frontend and backend components. It supports user login with role-based redirection for customers and admins.
-
+![Admin Page](adminpage.png)
+![Customer Page](customerpage.png)
+![Login Page](loginpage.png)
+![Catalog Page](catalog.png)
 ## Project Structure
 - `backend/`: Contains the Node.js backend server and API routes.
 - `frontend/`: Contains the HTML, CSS, and JavaScript files for the frontend UI.
