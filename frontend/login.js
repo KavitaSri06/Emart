@@ -19,13 +19,15 @@ document.addEventListener("DOMContentLoaded", function() {
       body: JSON.stringify(data)
     })
     .then((response) => response.json())
-    .then((data) => {
-      if (data.message) {
-        document.getElementById("error").innerText = data.message;
-      } else {
-        window.location.href = "shop.html";  // Or wherever you want to redirect after login
-      }
-    })
+.then((data) => {
+  if (data.message) {
+    document.getElementById("error").innerText = data.message;
+  } else if (data.role === "admin") {
+    window.location.href = "admin.html";
+  } else {
+    window.location.href = "shop.html";
+  }
+})
     .catch((error) => {
       console.error("Error:", error);
       document.getElementById("error").innerText = "Something went wrong!";
