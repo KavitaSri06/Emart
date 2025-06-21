@@ -61,6 +61,8 @@ eMart is a web application with separate frontend and backend components. It sup
   - cors
 - Frontend:
   - Plain HTML, CSS, and JavaScript
-
 ## Contact
-For further assistance, please contact the project maintainer.
+
+Made with ❤️ by Kavita Sri – gkavitasri@example.com  
+Connect with me on [LinkedIn](https://www.linkedin.com/in/g-kavita-sri-394031283/) or explore more projects on [GitHub](https://github.com/KavitaSri06).
+
