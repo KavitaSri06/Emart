@@ -1,53 +1,62 @@
-# 🛒 eMart - Grocery Shop Management System
+# eMart Website
 
-eMart is a web-based grocery shop management system built using Node.js, Express, and MySQL for the backend, and HTML, CSS, and JavaScript for the frontend.
+## Overview
+eMart is a web application with separate frontend and backend components. It supports user login with role-based redirection for customers and admins.
 
-## 🔧 Technologies Used
+## Project Structure
+- `backend/`: Contains the Node.js backend server and API routes.
+- `frontend/`: Contains the HTML, CSS, and JavaScript files for the frontend UI.
 
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Node.js, Express
-- **Database**: MySQL
+## Backend Setup
+1. Navigate to the backend directory:
+   ```
+   cd backend
+   ```
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the backend server:
+   ```
+   npm start
+   ```
+   The server runs on `http://localhost:5000` and connects to a MySQL database.
 
-## 📁 Folder Structure
+## Frontend Usage
+- Open `frontend/login.html` in a web browser.
+- Enter your username and password to log in.
+- Based on your role, you will be redirected to:
+  - `admin.html` for admin users.
+  - `shop.html` for customer users.
 
-- emart-project/
-  - emart-frontend/
-    - index.html
-    - admin.html
-    - (other frontend files)
-  - emart-backend/
-    - index.js
-    - db.js
-    - (other backend files)
-  - eMart.sql
+## Login Credentials for Testing
+- Admin:
+  - Username: `admin`
+  - Password: `admin123`
+- Customer:
+  - Username: `customer1`
+  - Password: `cust123`
 
-## 🚀 How to Run
+## Notes
+- The backend API endpoint for login is `POST /api/auth/login`.
+- The login page sends credentials to the backend and handles role-based redirection.
+- Ensure the backend server is running before attempting to log in.
+- Clear browser cache or do a hard reload if frontend changes are not reflected.
 
-### 1. Install Node.js and MySQL
+## Troubleshooting
+- If login fails, verify the backend server is running and the database is connected.
+- Check the browser console for errors.
+- Confirm you are using the correct login credentials.
 
-Make sure Node.js and MySQL are installed.
+## Dependencies
+- Backend:
+  - express
+  - mysql2
+  - bcrypt
+  - body-parser
+  - cors
+- Frontend:
+  - Plain HTML, CSS, and JavaScript
 
-### 2. Set Up the Database
-
-- Create a database named `emart`
-- Import `eMart.sql` using MySQL Workbench or phpMyAdmin
-
-### 3. Start Backend Server
-
-Open terminal inside `emart-backend` folder:
-
-```bash 
-npm install
-node index.js 
-```
-
-### 4.  Run Frontend
-Go to the emart-frontend folder
-
-Open index.html or admin.html
-
-Run using Live Server in VS Code
-(or double-click the file to open in browser)
-
-✅ That’s it! Your **eMart grocery shop system** is now ready to use.
-
+## Contact
+For further assistance, please contact the project maintainer.
