@@ -1,4 +1,5 @@
-# eMart Website
+# Emart Grocery (Full Stack Web App)
+
 
 ## Overview
 eMart is a web application with separate frontend and backend components. It supports user login with role-based redirection for customers and admins.
